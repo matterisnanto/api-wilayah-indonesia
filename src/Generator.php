@@ -22,7 +22,7 @@ class Generator
 
     public function clearOutputDir()
     {
-        $files = glob($this->outputDir.'/*');
+        $files = glob($this->outputDir . '/*');
         foreach ($files as $file) {
             Helper::removeFileOrDirectory($file);
         }
@@ -61,11 +61,12 @@ class Generator
     public function generateApi(string $uri, array $data)
     {
         $path = Helper::resolvePath($uri);
-
         $this->makeDirectoriesIfNotExists(dirname($path));
 
         $filePath = $this->getPath($path);
-        file_put_contents($filePath, json_encode($data));
+
+        // Pastikan semua field dipertahankan dalam output JSON
+        file_put_contents($filePath, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
         echo "+ {$uri}" . PHP_EOL;
     }
@@ -90,5 +91,4 @@ class Generator
         $ds = DIRECTORY_SEPARATOR;
         return rtrim($this->outputDir, $ds) . $ds . trim($path, $ds);
     }
-
 }
